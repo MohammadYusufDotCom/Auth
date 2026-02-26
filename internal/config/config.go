@@ -21,8 +21,11 @@ type ServerConfig struct {
 }
 
 type DatabaseConfig struct {
-	Host string
-	Port int
+	Host     string
+	Port     int
+	User     string
+	Password string
+	DBName   string
 }
 type RedisConfig struct {
 	Host string
@@ -41,8 +44,11 @@ func LoadConfig() *Config {
 			Port: parse.GetEnvInt(os.Getenv("SERVER_PORT"), 8080),
 		},
 		Database: DatabaseConfig{
-			Host: os.Getenv("DB_HOST"),
-			Port: parse.GetEnvInt(os.Getenv("DB_PORT"), 5432),
+			Host:     os.Getenv("DB_HOST"),
+			Port:     parse.GetEnvInt(os.Getenv("DB_PORT"), 5432),
+			User:     os.Getenv("DB_USER"),
+			Password: os.Getenv("DB_PASSWORD"),
+			DBName:   os.Getenv("DB_NAME"),
 		},
 		Redis: RedisConfig{
 			Host: os.Getenv("REDIS_HOST"),

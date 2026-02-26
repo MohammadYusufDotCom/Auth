@@ -15,7 +15,13 @@ var Config = config.LoadConfig()
 func main() {
 
 	SERVER_PORT := strconv.Itoa(Config.Server.Port)
+
+	db := config.ConnectDB()
+	defer db.Close()
+	// defer config.CloseDB()
+
 	store.InitRedis()
+	defer store.CloseRedis()
 
 	r := gin.Default()
 
@@ -30,5 +36,4 @@ func main() {
 		fmt.Println("Server started successfully on port 8008")
 	}
 
-	defer store.CloseRedis()
 }
