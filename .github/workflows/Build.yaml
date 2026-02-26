@@ -1,0 +1,35 @@
+name: "Build Auth Service"
+
+on:
+  push:
+    # branches: 
+      # - "main"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+
+      - name: "Step Go"
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.7'
+          cache: true
+
+      - name: "Setup go mod and download dependencies"
+        run: "go mod tidy && go mod download"
+
+      - name: "Build the binary"
+        run: "go -ldflags '-w -s' build -o auth ./cmd/main.go"
+        env:
+          GIN_MODE: release
+          CGO_ENABLED: 0
+          GOOS: linux
