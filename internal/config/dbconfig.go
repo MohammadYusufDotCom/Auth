@@ -10,7 +10,18 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+/*
+if we use global variable DB then we have to close it manually by calling db.Close() in main.go
+db.Close() is definded at the bottom of the this file (commented)
+*/
+
 // var DB *sql.DB
+
+/*
+we can call LoadConfig() in main.go and pass it to the ConnectDB() function
+Also we can call inside the ConnectDB() function
+*/
+
 var config = LoadConfig()
 
 func ConnectDB() *sql.DB {
@@ -24,7 +35,6 @@ func ConnectDB() *sql.DB {
 		config.Database.DBName,
 	)
 
-	// var err error
 	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
