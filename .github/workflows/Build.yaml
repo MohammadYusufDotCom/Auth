@@ -1,7 +1,7 @@
 name: "Build Auth Service"
 
 on:
-  push:
+  # push:
     # branches: 
       # - "main"
   workflow_dispatch: {}
@@ -28,8 +28,16 @@ jobs:
         run: "go mod tidy && go mod download"
 
       - name: "Build the binary"
-        run: "go -ldflags '-w -s' build -o auth ./cmd/main.go"
+        run: "go build -ldflags '-w -s' -o auth ./cmd/main.go"
         env:
           GIN_MODE: release
           CGO_ENABLED: 0
           GOOS: linux
+
+      - name: "Upload Binary"
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-binary
+          path: auth
+          retention-days: 1
+          
