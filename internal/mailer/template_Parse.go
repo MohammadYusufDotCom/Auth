@@ -11,11 +11,12 @@ type OTPData struct {
 	NAME string
 }
 
+//go:embed templates/*.html
 var templateFS embed.FS
 
 func ParseOTPTemplate(otp string, name *string) (string, error) {
-
-	tmpl, err := template.ParseFiles("internal/mailer/templates/otp_email.html")
+	tmpl, err := template.ParseFS(templateFS, "templates/otp_email.html")
+	// tmpl, err := template.ParseFiles("internal/mailer/templates/otp_email.html")
 	if err != nil {
 		return "", err
 	}
