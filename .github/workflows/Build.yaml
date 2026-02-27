@@ -31,7 +31,7 @@ jobs:
         run: "go build -ldflags '-w -s' -o auth ./cmd/main.go"
         env:
           GIN_MODE: release
-          CGO_ENABLED: 1
+          CGO_ENABLED: 0
           # GOOS: linux
 
       - name: "Upload Binary"
