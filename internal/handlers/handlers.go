@@ -32,12 +32,17 @@ func SendOTP(c *gin.Context) {
 	}
 
 	// TODO: Send via SMS / Email
-	err = mailer.SendMail(req.Email, otp, req.Name)
-	if err != nil {
+	if err := mailer.SendMail(req.Email, otp, req.Name); err != nil {
 		fmt.Printf("Error sending OTP: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP"})
 		return
 	}
+	// err = mailer.SendMail(req.Email, otp, req.Name)
+	// if err != nil {
+	// 	fmt.Printf("Error sending OTP: %v\n", err)
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP"})
+	// 	return
+	// }
 
 	c.JSON(http.StatusOK, gin.H{"message": "OTP sent"})
 }
