@@ -44,6 +44,11 @@ func ConnectDB() *sql.DB {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
+	// tune connection pool
+	db.SetMaxOpenConns(5)
+	db.SetMaxIdleConns(2)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
 	err = db.PingContext(ctx)
 	if err != nil {
 		log.Fatal("Error while connecting with DB", err)
@@ -61,5 +66,4 @@ func ConnectDB() *sql.DB {
 // 			fmt.Println("DB connection closed successfully")
 // 		}
 // 	}
-
 // }

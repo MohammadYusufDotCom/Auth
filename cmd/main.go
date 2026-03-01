@@ -17,6 +17,8 @@ func main() {
 	SERVER_PORT := strconv.Itoa(Config.Server.Port)
 
 	db := config.ConnectDB()
+	userHandler := &handlers.UserHandler{DB: db}
+
 	defer db.Close()
 	// defer config.CloseDB()
 
@@ -24,6 +26,8 @@ func main() {
 	defer store.CloseRedis()
 
 	r := gin.Default()
+
+	r.GET("/users/list", userHandler.GetUsers)
 
 	r.POST("/otp/send", handlers.SendOTP)
 	r.POST("/otp/verify", handlers.VerifyOTP)
