@@ -3,16 +3,21 @@ package services
 import (
 	"auth/internal/store"
 	"auth/internal/utils"
+	"crypto/sha256"
+	"encoding/hex"
 	"time"
 )
 
 func CreateOTP(key string) (string, error) {
 	otp := utils.GenerateOTP()
 
+	hash := sha256.Sum256([]byte(otp))
+	hashedOTP := hex.EncodeToString(hash[:])
+
 	err := store.Redis.Set(
 		store.Ctx,
 		key,
-		otp,
+		hashedOTP,
 		5*time.Minute,
 	).Err()
 
@@ -25,7 +30,10 @@ func VerifyOTP(key, userOTP string) (bool, error) {
 		return false, err
 	}
 
-	if savedOTP == userOTP {
+	hash := sha256.Sum256([]byte(userOTP))
+	hashedOTP := hex.EncodeToString(hash[:])
+
+	if savedOTP == hashedOTP {
 		store.Redis.Del(store.Ctx, key)
 		return true, nil
 	}

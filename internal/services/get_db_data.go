@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"time"
 )
 
 type User struct {
@@ -11,10 +12,15 @@ type User struct {
 	Email    string
 }
 
-func GetDBData(db *sql.DB) ([]User, error) {
-	rows, err := db.Query("SELECT ID, userName, email FROM users Limit 10")
+func GetDBData(db *sql.DB, lastId int) ([]User, error) {
+	rows, err := db.Query(`
+	SELECT ID, userName, email 
+	FROM users 
+	WHERE ID > ? 
+	ORDER BY ID ASC
+	LIMIT 2`, lastId)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("[%s] Error: %v\n", time.Now().Format(time.RFC3339), err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -26,10 +32,10 @@ func GetDBData(db *sql.DB) ([]User, error) {
 		// var userName string
 		// var email string
 		if err := rows.Scan(&u.ID, &u.UserName, &u.Email); err != nil {
-			fmt.Println("Error while scanning", err)
+			// fmt.Println("Error while scanning", err)
 			return nil, err
 		}
-		fmt.Println(u)
+		// fmt.Println(u)
 		users = append(users, u)
 	}
 	// fmt.Println("rows", rows)

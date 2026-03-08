@@ -38,10 +38,10 @@ func ConnectDB() *sql.DB {
 	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
-		log.Fatal("Error While connecting DB", err)
+		log.Fatalf("Error While connecting DB\n%v\n", err)
 	}
 	// Verify connection with timeout context
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 
 	// tune connection pool
@@ -51,7 +51,7 @@ func ConnectDB() *sql.DB {
 
 	err = db.PingContext(ctx)
 	if err != nil {
-		log.Fatal("Error while connecting with DB", err)
+		log.Fatalf("Error while connecting with DB\n%v\n", err)
 	}
 
 	fmt.Println("DB connected successfully")
